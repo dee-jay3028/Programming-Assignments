@@ -1,0 +1,23 @@
+a. What are your observations after running with different amounts of values, and different requested threads?
+
+    Obviously, increasing the number of values by a large margin increases the runtime substantially. The oneThousand.txt file had an average
+    runtime of roughly half a millisecond, while the oneMillion.txt file had an average runtime of closer to 50ms. Increasing the number of threads used for the computation
+    didn't necessarily decrease runtime, in fact in most cases it caused an increase.
+
+b. Do you find the observed behavior reasonable? Why or why not?
+
+    The behavior of the program seems reasonable, considering running more threads produces more overhead as a whole even if it divides the computations
+    into smaller chunks. It makes sense that increasing the thread requirements or the number of values would raise the computation time. 
+
+c. What kind of considerations did you make for your implementation of the critical section? Provide reasoning/justification.
+
+    Considering that the real purpose of a thread mutex/synchronization is to avoid overlapping or alteration of shared values among multiple threads, I figured
+    that the only real "critical section" of this program would be the addition of the individual thread sums to the overall total. Based on this, the line where
+    totalSum is altered is the only one that I wrapped in mutex lock statements. 
+
+[EXTRA]- What do you think would happen if instead of having the Threads loop over the int array to compute a local arraySum, and finally update the totalSum, we were instead just directly
+adding to the totalSum each time we were accessing an array element within each Thread (i.e. within the Thread's for loop)? Why?
+
+    If we were to accomplish a total sum by incrementing on every pass of each thread's for loop, there would be a significant overhead increase since the mutex lock would need to be activated
+    on every iteration of the thread's for loop- that is to say, instead of locking the mutex just a few times based on the number of threads used, we would be using it for every single value in 
+    the file (thousands or millions of times). This would not be efficient. 
